@@ -1,1 +1,1 @@
-moves all files beginning
+script that deletes all files in the current working directory
