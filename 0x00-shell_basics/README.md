@@ -1,1 +1,1 @@
-script that deletes all files in the current working directory
+lists all the files and directories of the current directory
