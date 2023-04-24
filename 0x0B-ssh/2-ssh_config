@@ -1,0 +1,5 @@
+#ssh config file
+HostName 52.3.247.105
+	User Lara
+	PasswordAuthentication no
+	IdentifyFile ~/.ssh/school
