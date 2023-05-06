@@ -16,17 +16,17 @@ defaults
 
 frontend haproxy-main
         bind :80
-	bind *:443 ssl crt /etc/ssl/wwwlarajay.tech/www.larajay.tech.pem
-	
-	redirect scheme https code 301 if !{ ssl_fc }
+        bind *:443 ssl crt /etc/ssl/wwwlarajay.tech/www.larajay.tech.pem
+
+        redirect scheme https code 301 if !{ ssl_fc }
 
         acl letsencrypt-acl path_beg /.well-known/acme-challenge/        use_backend letsencrypt-backend if letsencrypt-acl
         default_backend nginx_webservers
 
 backend nginx_webservers
-	balance roundrobin
-	server server1 100.25.102.158
-	server server2 54.157.173.185
+        balance roundrobin
+        server server1 100.25.102.158
+        server server2 54.157.173.185
 
 backend letsencrypt-backend
-	server letsencrypt 127.0.0.1:8888
+        server letsencrypt 127.0.0.1:8888
