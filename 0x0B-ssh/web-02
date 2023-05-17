@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Use a private
+#key ~/.ssh/school with the user ubuntu
+ssh ubuntu@54.157.173.185 -i ~/.ssh/id_rsa
