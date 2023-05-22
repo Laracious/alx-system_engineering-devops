@@ -1,21 +1,31 @@
 #!/usr/bin/python3
-"""
-    Uses the fake API to get an employer
-"""
+""" Rest api employees """
 import requests
 from sys import argv
 
-if __name__ == "__main__":
-    id_em = argv[1]
-    url_employ = "https://jsonplaceholder.typicode.com/users/{}".format(id_em)
-    url_todos = url_employ + "/todos"
-    r_employ = requests.get(url_employ).json()
-    r_todos = requests.get(url_todos).json()
-    name = r_employ.get("name")
-    total_num_task = r_todos
-    done_task = [task for task in r_todos if task.get("completed")]
-    output = "Employee {} is done with tasks({}/{}):".format(
-                name, len(done_task), len(total_num_task))
-    for task in done_task:
-        output += "\n\t " + task.get("title")
-    print(output)
+try:
+    int(argv[1])
+    id_user = argv[1]
+    user_data = requests.get(
+        'https://jsonplaceholder.typicode.com/users/{}'.format(id_user))
+    user_tasks = requests.get(
+        'https://jsonplaceholder.typicode.com/todos',
+        params={
+            'userId': id_user})
+
+    username = user_data.json()['name']
+    user_tasks_json = user_tasks.json()
+
+    tasks_completed = []
+    total_tasks = len(user_tasks_json)
+    for task in user_tasks_json:
+        if task['completed']:
+            tasks_completed.append(task['title'])
+
+    print('Employee {} is done with tasks({}/{}):'.format(username,
+                                                          len(tasks_completed),
+                                                          total_tasks))
+    for task in tasks_completed:
+        print('\t {}'.format(task))
+except Exception:
+    print('Not a valid argument'
