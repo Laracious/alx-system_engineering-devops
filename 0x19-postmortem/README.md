@@ -1,49 +1,31 @@
-# 0x19. Postmortem
+# Postmortem: Service Outage and Performance Degradation
+### This document provides a comprehensive overview of the service outage and performance degradation incident that occurred on our mental health platform. It includes details about the duration, impact, timeline, root cause, resolution, as well as corrective and preventative measures taken to address the issue and prevent future occurrences.
 
-#### Issue Summary
+## Issue Summary
+### Duration: June 1, 2023, 08:00 AM to June 2, 2023, 02:00 AM (WAT)
+###Impact: Slow response times and intermittent downtime experienced by users accessing our mental health platform, affecting approximately 30% of the user base.
+# Timeline:
+###Issue detected: June 1, 2023, 08:30 AM (WAT) through monitoring alerts indicating high latency and increased error rates.
 
-From Thursday, May 21, 2020, 12:00 AM to Thursday, May 21, 2020, 12:30 AM the wordpress page was down after uploading to the web server. 1% of users were affected after this issue. The root cause was a bad configuration in the wp-settings.php.
+###Actions taken: The investigation began by checking the server logs, database performance, and network connectivity, assuming the issue was related to infrastructure or database load.
+###Misleading investigation paths: Initially, the focus was on scaling up the infrastructure and optimizing database queries, but no significant improvement was observed.
+###Escalation: The incident was escalated to the DevOps team and senior engineers on June 1, 2023, 10:00 AM (WAT) when the root cause was not immediately apparent.
+###Incident resolution: The issue was resolved by June 2, 2023, 02:00 AM (WAT) after identifying and mitigating a software bug in the authentication module.
+## Root Cause and Resolution
+### Root cause: The root cause was traced to a race condition in the authentication module, which caused intermittent failures in user session handling and impacted overall system performance.
+###Resolution: The bug was identified by reviewing the codebase and performing extensive testing. A patch was deployed to address the race condition and ensure consistent session management. Additionally, the database connection pool settings were optimized to handle the load more efficiently.
+## Corrective and Preventative Measures
+### Improvements:
+### Implement thorough unit and integration testing to identify potential race conditions and critical bugs during development.
+###Enhance monitoring and alerting systems to quickly detect anomalies in system performance and latency.
+###Introduce automated load testing scenarios to simulate real-world usage patterns and identify performance bottlenecks.
 
-## Timeline
+## Tasks:
+### Apply the authentication module patch to all production servers and perform comprehensive testing to ensure its effectiveness.
+### Conduct a thorough code review of the entire application to identify and address any similar race condition vulnerabilities.
+###Implement enhanced logging and monitoring for improved debugging during future incidents.
+### Schedule regular load testing to proactively identify performance issues and optimize system capacity accordingly.
 
-On May 21, 2020, 12:00 AM: The DevOps Junior engineer updated the web server.
-
-At 12:05 AM: The DevOps Junior engineer detected the wordpress site was down.
-
-At 12:07 AM: The DevOps Junior engineer realized  that web server error was “500 Internal Server Error”.
-
-At 12:10 AM: The DevOps Junior engineer started debugging the web server and assumed the problem was a missing file.
-
-At 12:15 AM: After checking all files were present in the /var/www/html/ folder, the DevOps Junior Engineer assumed the problem was when importing the files and used “strace” built-in to debug.
-
-At 12:17 AM: The DevOps Junior engineer searched the process “of www-data” with “ps auxf” command.
-
-At 12:19 AM: The DevOps Junior engineer used curl 127.0.0.1 to test the “www-data” process.
-
-At 12:25 AM: The DevOps Junior engineer realized that it had an error when importing the /var/www/html/wp-includes/class-wp-locale.phpp file in /var/www/html/wp-settings.php file.
-
-At 12:28 AM: The DevOps Junior engineer opened the file /var/www/html/wp-settings.php and fixed the import name class-wp-locale.phpp to class-wp-locale.php.
-
-At 12:30 AM: The DevOps Junior engineer tested the web server with curl 127.0.0.1 again and the problem was solved.
-
-## Root cause and resolution
-
-The problem was the DevOps Junior engineer added an extra “p” letter at the end of the “class-wp-locale.php” file, so changed the name to “class-wp-locale.phpp” when he tried to update the wordpress site. Therefore, when the “class-wp-locale.phpp” file was imported in the /var/www/html/wp-settings.php the system failed because the file did not exist.
-
-To solve this problem the engineer checked the running process(ps auxf) and debug the www-data process using strace (strace www-data). There, he read the message “/var/www/html/wp-includes/class-wp-locale.phpp ENOENT (No such file or directory)”. The DevOps Junior engineer realized that had an error in the name of that file, he opened the “/var/www/html/wp-settings.php” file, search the “class-wp-locale.phpp” file, delete the extra “p” letter and save the changes.
-
-## Corrective and preventative measures  
-
-To avoid this type of error it is recommended to change the permissions of the /var/www/html/wp-settings.php to only be handled by the DevOps Senior engineer and do not let the Junior engineers make the deploy of the project.
-
-To address this king of issues you can follow the below steps.
-
--   Check the server is up, so use a request to it. Example: curl 127.0.0.1
-    
--   Check all the processes involved (mysql, nginx, apache, PHP) are up. Example: ps auxf.
-    
--   Debug the web server process when a request arrives. Example: strace PHP
-    
--   Read each message displayed.
-    
--   Solve the problem.
+## Conclusion
+### The service outage and performance degradation experienced on our mental health platform were attributed to a race condition in the authentication module. Through thorough investigation and collaboration among teams, we successfully resolved the issue and implemented measures to prevent similar incidents in the future. By continuously improving our testing, monitoring, and development practices, we aim to provide a reliable and seamless experience for our users while ensuring the stability and performance of our platform.
+### We appreciate your understanding and patience during this incident. If you have any further questions or concerns, please don't hesitate to contact our support team.
